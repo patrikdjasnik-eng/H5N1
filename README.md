@@ -13,7 +13,7 @@ H5N1 je výzkumná platforma pro **bezpečnost dronů, prevenci kolizí s obytn�
 - In-memory auditní řetězec s kontrolou hash integrity.
 - REST API FastAPI a React/TypeScript dashboard s tmavým fialovým rozhraním.
 - Šest reprodukovatelných testovacích scénářů, automatizovaná testovací sada a GitHub Actions konfigurace.
-- Kompletní česká specifikace **všech dříve navržených funkcí** včetně stavu jejich realizace.
+- Kompletní česká specifikace **všech 56 požadovaných funkcí** včetně stavu jejich realizace. Aktuální stav lze také ověřit přes API /api/v1/modules a přímo v dashboardu.
 
 **Není implementováno:** skutečné ovládání dronů, živý FPV obraz, akustická klasifikace modelů, kamery, RF senzory, fyzická formace, reálné failsafe ani produkční AI Máša. Jsou vedené jako samostatné, testovatelné vývojové úkoly. UI je výslovně označuje jako PLANNED nebo SIM.
 
