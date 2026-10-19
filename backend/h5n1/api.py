@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from .simulation import SCENARIOS, FleetSimulator
+from .registry import module_catalog
 
 
 app = FastAPI(
@@ -72,3 +73,8 @@ def preflight() -> dict[str, object]:
 @app.get("/api/v1/audit")
 def audit() -> dict[str, object]:
     return {"entries": sim.audit.entries[-100:], "chainValid": sim.audit.verify(), "simulation": True}
+
+
+@app.get("/api/v1/modules")
+def modules() -> dict[str, object]:
+    return module_catalog()
