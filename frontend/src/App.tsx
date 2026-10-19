@@ -29,6 +29,19 @@ type Assessment = {
   simulation: boolean;
 };
 
+type FeatureCatalog = {
+  count: number;
+  simulation: boolean;
+  summary: Record<string, number>;
+  modules: Array<{
+    code: string;
+    category: string;
+    title: string;
+    status: "SIM" | "PROTOTYPE" | "PLANNED" | "HW_REQUIRED";
+    description: string;
+  }>;
+};
+
 type FleetData = {
   project: string;
   mode: "SIMULATION";
@@ -125,6 +138,7 @@ const FormationMap = memo(function FormationMap({ data }: { data: FleetData }) {
 
 export default function App() {
   const [data, setData] = useState<FleetData | null>(null);
+  const [catalog, setCatalog] = useState<FeatureCatalog | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -144,6 +158,22 @@ export default function App() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch("/api/v1/modules", { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Katalog nedostupný");
+        return response.json() as Promise<FeatureCatalog>;
+      })
+      .then((result) => {
+        if (!controller.signal.aborted && result.simulation) setCatalog(result);
+      })
+      .catch(() => {
+        // Katalog je doplňková sekce, nedostupnost nesmí zablokovat bezpečnostní stav.
+      });
+    return () => controller.abort();
+  }, []);
 
   const execute = useCallback(async (path: string, body: object) => {
     setBusy(true);
@@ -265,11 +295,16 @@ export default function App() {
             </div>
           </section>
           <section id="modules" className="panel">
-            <div className="panel-head"><div><div className="eyebrow">CAPABILITY STATUS</div><h2>Research Modules</h2></div><span className="tiny-status">ROADMAP</span></div>
-            <div className="feature-list">{featureGroups.map(({ icon: Icon, title, description, status }) => (
-              <div className="feature-item" key={title}><span className="module-icon"><Icon size={18}/></span>
-                <div><strong>{title}</strong><small>{description}</small></div><span className="module-status">{status}</span></div>
-            ))}</div>
+            <div className="panel-head"><div><div className="eyebrow">CAPABILITY STATUS</div><h2>Research Modules</h2></div><span className="tiny-status">{catalog ? catalog.count + " MODULŮ" : "ROADMAP"}</span></div>
+            <p className="support-copy">Kompletní registr funkcí. Stav každého modulu odpovídá skutečné implementaci, nikoliv příslibu.</p>
+            <div className="feature-list catalog-scroll">
+              {catalog ? catalog.modules.map((module) => (
+                <div className="feature-item" key={module.code}><span className="module-icon"><Radar size={18}/></span>
+                  <div><strong>{module.code} · {module.title}</strong><small>{module.category} · {module.description}</small></div>
+                  <span className="module-status">{module.status}</span>
+                </div>
+              )) : <div className="panel-placeholder">Katalog modulů není dostupný.</div>}
+            </div>
           </section>
         </div>
 
