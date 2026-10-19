@@ -9,6 +9,7 @@ from h5n1.safety import (
     evaluate_risk, stopping_distance, time_to_aabb_collision,
 )
 from h5n1.simulation import FleetSimulator
+from h5n1.registry import module_catalog
 
 
 class SafetyTests(unittest.TestCase):
@@ -107,3 +108,17 @@ class SimulationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CatalogTests(unittest.TestCase):
+    def test_all_requested_modules_have_unique_identity(self) -> None:
+        catalog = module_catalog()
+        self.assertEqual(catalog["count"], 56)
+        entries = catalog["modules"]
+        self.assertEqual(len({entry["code"] for entry in entries}), 56)
+        self.assertTrue(catalog["simulation"])
+
+    def test_no_modules_falsely_claim_live_hardware(self) -> None:
+        catalog = module_catalog()
+        self.assertNotIn("LIVE", catalog["summary"])
+        self.assertEqual(set(catalog["summary"]), {"SIM", "PROTOTYPE", "PLANNED", "HW_REQUIRED"})
