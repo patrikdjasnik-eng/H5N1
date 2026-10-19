@@ -63,6 +63,10 @@ Dovolený interval 0 < seconds <= 5. Odpověď: nový snapshot. Výpočet integr
 
 Obsahuje pro každý simulovaný uzel batteryOk, linkOk, motorOk a telemetryFresh. Jde o kontrolu datových příznaků v simulaci, nikoliv náhradu fyzické předletové kontroly.
 
+## GET /api/v1/modules
+
+Vrací registr všech 56 požadovaných funkcí, jejich jednoznačné ID, kategorii, popis, stav implementace a souhrnné počty. Podporované stavy: SIM, PROTOTYPE, PLANNED, HW_REQUIRED. Žádný modul není označen LIVE, protože tato verze nepoužívá reálné senzory.
+
 ## GET /api/v1/audit
 
 Vrací posledních 100 událostí v paměti běžícího procesu a chainValid. Audit se po restartu backendu ztrácí; pro produkční dokazování by bylo nutné odolné, podepsané a vzdáleně replikované úložiště.
