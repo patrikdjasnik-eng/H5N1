@@ -64,4 +64,4 @@ Projekt je **simulation-first**, bez aktivního RF rušení, hackování cizích
 
 **Release:** dosud nevydáno a neověřeno na fyzických dronech.
 
-**Licence:** zatím nebyla stanovena; nepředpokládej open-source licenci bez výslovného rozhodnutí vlastníka.
+**Licence:** zatím nebyla stanovena
