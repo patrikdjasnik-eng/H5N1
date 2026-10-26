@@ -117,14 +117,23 @@ const FormationMap = memo(function FormationMap({ data }: { data: FleetData }) {
             stroke="#a693ff" strokeOpacity=".35" strokeDasharray="5 6" />
         ))}
         {objects.map((drone) => (
-          <g key={drone.id} transform={"translate(" + drone.x + " " + drone.y + ")"}>
-            <circle r={drone.role === "PRIMARY" ? 25 : 17} fill={drone.role === "PRIMARY" ? "#7665eb" : "#60d7bc"} fillOpacity=".1"
+          <g key={drone.id} className={"drone-body " + (drone.role === "PRIMARY" ? "drone-primary" : "drone-guardian")} transform={"translate(" + drone.x + " " + drone.y + ")"} style={{ ["--drone-phase" as string]: drone.id.length * 0.7 + "s" }}>
+            <ellipse className="drone-shadow" cx="0" cy="9" rx={drone.role === "PRIMARY" ? 27 : 19} ry="8" fill="#05070c" fillOpacity=".42" />
+            <circle className="drone-safety-ring" r={drone.role === "PRIMARY" ? 25 : 17} fill={drone.role === "PRIMARY" ? "#7665eb" : "#60d7bc"} fillOpacity=".09"
               stroke={drone.role === "PRIMARY" ? "#a693ff" : "#60d7bc"} strokeOpacity=".7"/>
-            <path d="M-9 -9 L9 9 M9 -9 L-9 9" stroke={drone.role === "PRIMARY" ? "#baafff" : "#68d8c0"} strokeWidth="2"/>
-            <circle cx="-10" cy="-10" r="4" fill="none" stroke="#a6acc5" />
-            <circle cx="10" cy="-10" r="4" fill="none" stroke="#a6acc5" />
-            <circle cx="-10" cy="10" r="4" fill="none" stroke="#a6acc5" />
-            <circle cx="10" cy="10" r="4" fill="none" stroke="#a6acc5" />
+            <g className="drone-frame" stroke={drone.role === "PRIMARY" ? "#baafff" : "#68d8c0"} strokeWidth="2.5" strokeLinecap="round">
+              <path d="M-5 -5 L-13 -13 M5 -5 L13 -13 M-5 5 L-13 13 M5 5 L13 13" />
+              <path d="M-9 -9 L9 9 M9 -9 L-9 9" strokeWidth="3.5" />
+            </g>
+            {[[-14,-14],[14,-14],[-14,14],[14,14]].map(([rx, ry], rotorIndex) => (
+              <g key={rotorIndex} className="rotor" style={{ ["--rotor-delay" as string]: (rotorIndex * -0.12) + "s" }} transform={"translate(" + rx + " " + ry + ")"}>
+                <circle r="6.5" fill="#0e1420" stroke="#b6c0da" strokeWidth="1.2"/>
+                <ellipse className="rotor-blade" rx="5.5" ry="1.5" fill="#d6ddf2" fillOpacity=".9"/>
+                <ellipse className="rotor-blade rotor-blade-second" rx="5.5" ry="1.5" fill="#d6ddf2" fillOpacity=".9" transform="rotate(90)"/>
+                <circle r="1.7" fill="#b9aaff"/>
+              </g>
+            ))}
+            <circle r="3.5" fill={drone.role === "PRIMARY" ? "#d9d0ff" : "#b3ffeb"} />
             <text textAnchor="middle" y="39" className="svg-label">{drone.id}</text>
             <line x1="17" y1="0" x2="58" y2="0" stroke="#aaa3fa" strokeWidth="1.5" strokeDasharray="4 5"/>
           </g>
