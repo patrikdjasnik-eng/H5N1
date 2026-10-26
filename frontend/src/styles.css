@@ -20,3 +20,19 @@
 
 .catalog-scroll{max-height:440px;overflow-y:auto;scrollbar-color:#514975 #141828;scrollbar-width:thin;padding-right:7px}
 .catalog-scroll .module-status{font-size:9px;text-align:right;min-width:72px}
+
+
+/* Rotor animation is visual-only: all positions and safety decisions still come from the simulator. */
+.drone-body{transform-box:fill-box;transform-origin:center;transition:transform 900ms cubic-bezier(.22,.72,.2,1);will-change:transform}
+.drone-body .drone-frame{animation:drone-hover 2.8s ease-in-out infinite;animation-delay:var(--drone-phase,0s);transform-box:fill-box;transform-origin:center}
+.drone-body .drone-safety-ring{animation:drone-pulse 3.4s ease-in-out infinite;animation-delay:var(--drone-phase,0s)}
+.rotor{transform-box:fill-box;transform-origin:center;animation:rotor-vibration .16s linear infinite;animation-delay:var(--rotor-delay,0s)}
+.rotor-blade{animation:rotor-spin .075s linear infinite;transform-origin:center}
+.rotor-blade-second{animation-direction:reverse}
+.drone-shadow{animation:shadow-drift 2.8s ease-in-out infinite;animation-delay:var(--drone-phase,0s)}
+@keyframes rotor-spin{to{transform:rotate(360deg)}}
+@keyframes rotor-vibration{0%,100%{opacity:1}50%{opacity:.78}}
+@keyframes drone-hover{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes drone-pulse{0%,100%{stroke-opacity:.42}50%{stroke-opacity:.9}}
+@keyframes shadow-drift{0%,100%{opacity:.38;transform:scale(1)}50%{opacity:.25;transform:scale(.9)}}
+@media(prefers-reduced-motion:reduce){.drone-body,.drone-body .drone-frame,.drone-body .drone-safety-ring,.rotor,.rotor-blade,.drone-shadow{animation:none!important;transition:none!important}}
